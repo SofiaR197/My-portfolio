@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <style>
+        body { font-family: Arial; text-align: center; background: #0b0d17; color: white; }
+        img { max-width: 80%; border-radius: 10px; margin-top: 20px; }
+        .container { width: 80%; margin: auto; padding: 20px; }
+        .card { background: #1a1c29; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ title }}</h1>
+        <div class="card">
+            <img src="{{ image_url }}" alt="NASA Image of the Day">
+            <p>{{ explanation }}</p>
+        </div>
+    </div>
+</body>
+</html>
