@@ -73,22 +73,21 @@ df['is_success'] = df['mission_status'].fillna('').str.lower().apply(
 df['mission_result'] = df['is_success'].map({True:'success', False:'failure', np.nan:'unknown'})
 
 
-
 top_orgs = df['organization'].value_counts().head(8).index.tolist()
 df_top = df[df['organization'].isin(top_orgs)]
 count_year_org = df_top.groupby(['year','organization']).size().reset_index(name='launches').dropna(subset=['year'])
 
 fig1 = px.bar(count_year_org, x='year', y='launches', color='organization',
-              title='Lanzamientos por organización (top 8) por año')
+              title='Launches by Organization (Top 8) per Year')
 fig1.show()
 
-# 6.2 Coste medio y mediana por año
+
 price_by_year = df.dropna(subset=['price_num']).groupby('year')['price_num'].agg(['median','mean']).reset_index()
 plt.figure(figsize=(10,5))
-plt.plot(price_by_year['year'], price_by_year['median'], marker='o', label='Mediana')
-plt.plot(price_by_year['year'], price_by_year['mean'], marker='.', linestyle='--', label='Media')
-plt.xlabel('Año'); plt.ylabel('Coste (unidades en dataset)')
-plt.title('Evolución del coste de las misiones')
+plt.plot(price_by_year['year'], price_by_year['median'], marker='o', label='Median')
+plt.plot(price_by_year['year'], price_by_year['mean'], marker='.', linestyle='--', label='Mean')
+plt.xlabel('Year'); plt.ylabel('Cost (dataset units)')
+plt.title('Mission Cost Evolution Over Time')
 plt.legend()
 plt.show()
 
@@ -99,7 +98,7 @@ month_counts = df['month_name'].value_counts().reindex(month_order, fill_value=0
 plt.figure(figsize=(10,4))
 sns.barplot(x=month_counts.index, y=month_counts.values)
 plt.xticks(rotation=45)
-plt.title('Lanzamientos por mes')
+plt.title('Launches by Month')
 plt.show()
 
 
@@ -108,8 +107,8 @@ success_by_year['success_rate'] = success_by_year['sum'] / success_by_year['coun
 plt.figure(figsize=(10,5))
 plt.plot(success_by_year['year'], success_by_year['success_rate'], marker='o')
 plt.ylim(0,1)
-plt.title('Tasa de éxito de misiones por año')
-plt.xlabel('Año'); plt.ylabel('Tasa de éxito')
+plt.title('Mission Success Rate per Year')
+plt.xlabel('Year'); plt.ylabel('Success Rate')
 plt.show()
 
 
@@ -119,19 +118,19 @@ country_counts['iso3'] = country_counts['country'].apply(country_to_iso3)
 map_df = country_counts.dropna(subset=['iso3'])
 fig2 = px.choropleth(map_df, locations='iso3', color='launches',
                      hover_name='country', color_continuous_scale=px.colors.sequential.Plasma,
-                     title='Lanzamientos por país (total)')
+                     title='Total Launches by Country')
 fig2.show()
 
 
 top_orgs_sunburst = df['organization'].value_counts().head(10).index.tolist()
 sb_df = df[df['organization'].isin(top_orgs_sunburst)].copy()
 fig3 = px.sunburst(sb_df, path=['organization', 'country', 'mission_result'],
-                   title='Organización -> País -> Resultado')
+                   title='Organization -> Country -> Result')
 fig3.show()
 
 
-print("\n=== Resumen ===")
-print("Total de misiones:", len(df))
-print("Con coste conocido:", df['price_num'].notna().sum())
-print("Con fecha válida:", df['date'].notna().sum())
-print("Columnas del dataset:", df.columns.tolist())
+print("\n=== Summary ===")
+print("Total missions:", len(df))
+print("Missions with known cost:", df['price_num'].notna().sum())
+print("Missions with valid date:", df['date'].notna().sum())
+print("Dataset columns:", df.columns.tolist())
